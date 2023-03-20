@@ -45,7 +45,7 @@ export const generateClasses = (json: JSON, settings:settings) => {
 };
 
 const generateClass = (className: string, variables: any[], settings:settings) => {
-    return `${settings.classHeader !== ""? settings.classHeader + '\n': ""}${settings.packageName}\n\nimport java.io.Serializable;\n${
+    return `${settings.classHeader !== ""? settings.classHeader + '\n': ""}${settings.packageName}\n\nimport java.io.Serializable;\nimport com.google.common.base.MoreObjects;\n${
         variables.filter((v) => v.type.includes("List<")).length > 0
             ? "import java.util.List;\n"
             : ""
