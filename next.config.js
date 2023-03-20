@@ -6,7 +6,7 @@ const withTM = require("next-transpile-modules")([
 ]);
 
 const nextConfig = {
-    webpack: (config) => {
+    webpack: (config, options) => {
         const rule = config.module.rules
             .find((rule) => rule.oneOf)
             .oneOf.find(
@@ -24,15 +24,14 @@ const nextConfig = {
             ];
         }
 
-        config.plugins.push(
-            new MonacoWebpackPlugin({
-                languages: [
-                    "json",
-                    "java",
-                ],
-                filename: "static/[name].worker.js",
-            })
-        );
+        if (!options.isServer) {
+            config.plugins.push(
+                new MonacoWebpackPlugin({
+                    languages: ["java", "json"],
+                    filename: "static/[name].worker.js",
+                })
+            );
+        }
         return config;
     },
     reactStrictMode: true,
