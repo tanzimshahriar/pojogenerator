@@ -23,10 +23,16 @@ export default function Home() {
     const [pojoClasses, setPojoClasses] = useState<
         Array<{ className: string; value: any }>
     >([]);
+    const [error, setError] = useState(false);
 
     const generatePojo = () => {
-        setPojoClasses(generateClasses(JSON.parse(jsonInput), settings));
-        setPage(0);
+        try {
+            setPojoClasses(generateClasses(JSON.parse(jsonInput), settings));
+            setPage(0);
+            setError(false);
+        } catch(e) {
+            setError(true);
+        }
     };
 
     return (
@@ -89,6 +95,7 @@ export default function Home() {
                 )}
                 <div className="container mx-auto py-4 lg:pb-8 flex flex-1">
                     <div className="flex flex-col w-full gap-2">
+                        {error && <div className="text-red-500">Error! Your JSON object is invalid</div>}
                         <div className="flex-1">
                             {page === -1 ? (
                                 <JsonEditor
