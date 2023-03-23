@@ -12,7 +12,7 @@ const KNOWN_TYPES = [
     "list<long>",
 ];
 
-export const generateClasses = (json: JSON, settings:settings) => {
+export const generateClasses = (json: JSON, settings: settings) => {
     const keys =
         json instanceof Array
             ? json[0] &&
@@ -32,20 +32,27 @@ export const generateClasses = (json: JSON, settings:settings) => {
                 : {}
             : json
     );
-    const classes: any = [];
+    const classes: Array<any> = [];
     const variables = getVariables(keys, values, classes, settings);
 
     classes.push({
         className: `${
-            settings.parentClass.charAt(0).toUpperCase() + settings.parentClass.slice(1)
+            settings.parentClass.charAt(0).toUpperCase() +
+            settings.parentClass.slice(1)
         }.java`,
         value: generateClass(settings.parentClass, variables, settings),
     });
-    return classes;
+    return classes.sort((a, b) => a.className.localeCompare(b.className));
 };
 
-const generateClass = (className: string, variables: any[], settings:settings) => {
-    return `${settings.classHeader !== ""? settings.classHeader + '\n': ""}${settings.packageName}\n\nimport java.io.Serializable;\nimport com.google.common.base.MoreObjects;\n${
+const generateClass = (
+    className: string,
+    variables: any[],
+    settings: settings
+) => {
+    return `${settings.classHeader !== "" ? settings.classHeader + "\n" : ""}${
+        settings.packageName
+    }\n\nimport java.io.Serializable;\nimport com.google.common.base.MoreObjects;\n${
         variables.filter((v) => v.type.includes("List<")).length > 0
             ? "import java.util.List;\n"
             : ""
@@ -77,9 +84,13 @@ const generateGetterSetter = (variables: any[]) => {
     ${variables
         .map((v: { type: any; name: string }) => {
             const getterMethodName =
-                (v.type === "boolean"
-                    ? "is"
-                    : "get") + v.name.charAt(0).toUpperCase() + v.name.slice(1);
+                v.type === "boolean"
+                    ? v.name.startsWith("is")
+                        ? v.name
+                        : "is" +
+                          v.name.charAt(0).toUpperCase() +
+                          v.name.slice(1)
+                    : "get" + v.name.charAt(0).toUpperCase() + v.name.slice(1);
             return `public ${v.type} ${getterMethodName}() {
         return ${v.name};
     }
@@ -94,7 +105,12 @@ const generateGetterSetter = (variables: any[]) => {
         .join("\n    ")}`;
 };
 
-const getVariables = (keys: string[], values: any[], classes: any[], settings:settings) => {
+const getVariables = (
+    keys: string[],
+    values: any[],
+    classes: any[],
+    settings: settings
+) => {
     return keys.map((k: string, i) => {
         let type = getType(values[i], k);
         if (!KNOWN_TYPES.includes(type.toLowerCase())) {
