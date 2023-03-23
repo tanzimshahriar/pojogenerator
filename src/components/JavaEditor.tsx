@@ -18,6 +18,7 @@ const JavaEditor = ({ value }: { value: string }) => {
                 contextmenu: false,
                 formatOnPaste: true,
                 formatOnType: true,
+                automaticLayout: true,
             }}
         />
     );

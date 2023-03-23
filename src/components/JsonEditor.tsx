@@ -36,6 +36,7 @@ const JsonEditor = ({
                 contextmenu: false,
                 formatOnPaste: true,
                 formatOnType: true,
+                automaticLayout: true,
             }}
             onChange={(v) => setJsonInput(v)}
         />

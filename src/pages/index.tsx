@@ -6,6 +6,7 @@ import JsonEditor from "@/components/JsonEditor";
 import JavaEditor from "@/components/JavaEditor";
 import Settings from "@/components/Settings";
 import Image from "next/image";
+import Button from "@/components/Button";
 
 const DEFAULT_SETTINGS = {
     parentClass: "Parent",
@@ -79,15 +80,7 @@ export default function Home() {
                         Json Editor
                     </button>
                     {pojoClasses.map((pojoTab, i) => (
-                        <button
-                            key={i}
-                            className={`shadow-md py-2 px-4 rounded-sm ${
-                                page === i ? "bg-gray-600" : "bg-gray-800"
-                            }`}
-                            onClick={() => setPage(i)}
-                        >
-                            {pojoTab.className}
-                        </button>
+                        <Button key={i} text={pojoTab.className} onClick={() => setPage(i)} active={page === i} />
                     ))}
                 </nav>
                 {showSettings && (
