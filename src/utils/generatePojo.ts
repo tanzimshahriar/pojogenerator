@@ -95,7 +95,7 @@ const generateGetterSetter = (variables: any[]) => {
         return ${v.name};
     }
 
-    public ${v.type} set${v.name.charAt(0).toUpperCase() + v.name.slice(1)}(${
+    public void set${v.name.charAt(0).toUpperCase() + v.name.slice(1)}(${
                 v.type
             } ${v.name}) {
         this.${v.name} = ${v.name};
